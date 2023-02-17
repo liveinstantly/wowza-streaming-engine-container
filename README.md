@@ -4,13 +4,18 @@
 
 This is a repository for building a Wowza Streaming Engine contaienr image from scratch, which can be applied to your custom container image of Wowza Streaming Engine instance. This container image is based on Ubuntu 22.04 (Jammy) release.
 
-Although there is official public container images from Wowza at Docker Hub ([https://hub.docker.com/r/wowzamedia/wowza-streaming-engine-linux](https://hub.docker.com/r/wowzamedia/wowza-streaming-engine-linux)), this repository gives you a chance to optimize your own container image for Wowza Streaming Engine. For example, you can reduce a footprint like the following command output of `docker image ls` below. This output shows 32 MB (8%) reduction of footprint.
+Although there is official public container images from Wowza at Docker Hub ([https://hub.docker.com/r/wowzamedia/wowza-streaming-engine-linux](https://hub.docker.com/r/wowzamedia/wowza-streaming-engine-linux)), this repository gives you a chance to optimize your own container image for Wowza Streaming Engine. For example, you can reduce a footprint like the following command output of `docker image ls` below. This output shows 32~36 MB (about 8%) reduction of footprint.
 
 ```shell
 $ docker image ls
-REPOSITORY                                    TAG              IMAGE ID       CREATED              SIZE
-liveinstantly/wowza-streaming-engine-ubuntu   4.8.20           9038e5c68ee2   About a minute ago   488MB
-wowzamedia/wowza-streaming-engine-linux       4.8.20           4778ca39ce29   5 months ago         520MB
+REPOSITORY                                            TAG              IMAGE ID       CREATED          SIZE
+ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu   4.8.20           6bc3edb6f959   2 hours ago      488MB
+wowzamedia/wowza-streaming-engine-linux               4.8.20           4778ca39ce29   5 months ago     520MB
+
+$ docker image ls
+REPOSITORY                                            TAG              IMAGE ID       CREATED          SIZE
+ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu   4.8.21           23708fdfa012   20 seconds ago   487MB
+wowzamedia/wowza-streaming-engine-linux               4.8.21           97511269b1ae   3 weeks ago      523MB
 ```
 
 ## Quick Start
@@ -20,12 +25,12 @@ wowzamedia/wowza-streaming-engine-linux       4.8.20           4778ca39ce29   5 
 We have pushed our custom container image for Wowza Streaming Engine (Linux) at GitHub Container Registy.
 You can use the following container images:
 
-* `ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu:4.8.20`
+* `ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu:4.8.21`
 
 Here is a sample command to pull an image for your Docker environment.
 
 ```shell
-docker pull ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu:4.8.20
+docker pull ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu:4.8.21
 ```
 
 ### 2. Run a container image
@@ -70,7 +75,7 @@ docker run -d --rm \
     --env WSE_MGR_PASS=[password] \
     --env WSE_LIC=[license] \
     --env WSE_IP_PARAM=[wowza-ip-address] \
-    liveinstantly/wowza-streaming-engine-ubuntu:4.8.20
+    liveinstantly/wowza-streaming-engine-ubuntu:[VERSION_TAG]
 ```
 
 You can also do a test run with the following command:
@@ -86,6 +91,8 @@ yarn run run-test
 The build scripts in this repository will give you a way to build a container image from scratch with public Linux container image. This will use `ubuntu:jammy` container image as base Linux image for Wowza Streaming Engine.
 
 The build scripts will download Wowza Streaming Engine Installer binary from Wowza's public website, do unattended installation, and change server configuration files.
+
+> NOTE: From 4.8.21 or later version of Wowza Streaming Engine, Wowza seems not to deliver installer binaries at thier public website. Your will need to download from Wowza Portal after logging in with your Wowza account. Please copy the installer to `image_root/root` folder before building your own container image.
 
 The changes of server configuration files are as below:
 

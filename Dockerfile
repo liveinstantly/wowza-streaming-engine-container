@@ -34,8 +34,10 @@ RUN apt update -y && apt upgrade -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 # Download Wowza Streaming Engine installer package.
-RUN curl -o /root/WowzaStreamingEngine-linux-x64-installer.run \
-    https://www.wowza.com/downloads/WowzaStreamingEngine-4-8-20+1/WowzaStreamingEngine-4.8.20+1-linux-x64-installer.run
+#RUN curl -o /root/WowzaStreamingEngine-linux-x64-installer.run \
+#    https://www.wowza.com/downloads/WowzaStreamingEngine-4-8-20+1/WowzaStreamingEngine-4.8.20+1-linux-x64-installer.run
+# Use Downloaded Wowza Streaming Engine installer package.
+RUN mv /root/WowzaStreamingEngine-4.*-linux-x64-installer.run /root/WowzaStreamingEngine-linux-x64-installer.run
 # Setup Wowza Streaming Engine.
 RUN chmod +x /root/WowzaStreamingEngine-linux-x64-installer.run \
     && /root/wse4_unattended_installer.exp \
