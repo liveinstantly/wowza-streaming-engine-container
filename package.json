@@ -1,0 +1,7 @@
+{
+    "scripts": {
+        "build-for-your-own": "docker build -t your-own/wowza-streaming-engine-ubuntu:4.8.20 .",
+        "build-for-public": "docker build -t ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu:4.8.20 .",
+        "run-test": "docker run -d --rm --expose 1935/tcp --expose 8086/tcp --expose 8087/tcp --expose 8088/tcp --publish 1935:1935 --publish 8086:8086 --publish 8087:8087 --publish 8088:8088 liveinstantly/wowza-streaming-engine-ubuntu:4.8.20"
+    }
+}

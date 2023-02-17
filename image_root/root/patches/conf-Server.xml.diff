@@ -1,0 +1,11 @@
+--- conf/Server.xml.orig	2023-02-17 09:52:50.168643254 +0000
++++ conf/Server.xml	2023-02-17 09:53:02.868687716 +0000
+@@ -22,7 +22,7 @@
+ 				<CipherSuites></CipherSuites>
+ 				<Protocols></Protocols>
+ 			</SSLConfig>
+-			<IPWhiteList>127.0.0.1</IPWhiteList>
++			<IPWhiteList>*</IPWhiteList>
+ 			<IPBlackList></IPBlackList>
+ 			<EnableXMLFile>false</EnableXMLFile>
+ 			<DocumentationServerEnable>false</DocumentationServerEnable>

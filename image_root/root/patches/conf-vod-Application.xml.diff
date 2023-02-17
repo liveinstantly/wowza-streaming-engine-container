@@ -1,0 +1,108 @@
+--- conf/vod/Application.xml.orig	2023-02-16 18:53:07.638485295 +0000
++++ conf/vod/Application.xml	2023-02-16 18:59:46.298683868 +0000
+@@ -18,21 +18,21 @@
+ 		</Connections>
+ 		<!--
+ 			StorageDir path variables
+-			
++
+ 			${com.wowza.wms.AppHome} - Application home directory
+ 			${com.wowza.wms.ConfigHome} - Configuration home directory
+ 			${com.wowza.wms.context.VHost} - Virtual host name
+ 			${com.wowza.wms.context.VHostConfigHome} - Virtual host config directory
+ 			${com.wowza.wms.context.Application} - Application name
+ 			${com.wowza.wms.context.ApplicationInstance} - Application instance name
+-			
++
+ 		-->
+ 		<Streams>
+ 			<StreamType>default</StreamType>
+ 			<StorageDir>${com.wowza.wms.context.VHostConfigHome}/content</StorageDir>
+ 			<KeyDir>${com.wowza.wms.context.VHostConfigHome}/keys</KeyDir>
+ 			<!-- LiveStreamPacketizers (separate with commas): cupertinostreamingpacketizer,   mpegdashstreamingpacketizer, cupertinostreamingrepeater,   mpegdashstreamingrepeater, dvrstreamingpacketizer, dvrstreamingrepeater -->
+-			<LiveStreamPacketizers></LiveStreamPacketizers>			
++			<LiveStreamPacketizers></LiveStreamPacketizers>
+ 			<!-- Properties defined here will override any properties defined in conf/Streams.xml for any streams types loaded by this application -->
+ 			<Properties>
+ 			</Properties>
+@@ -54,7 +54,7 @@
+ 			<!-- As an origin, also add dvrchunkstreaming to HTTPStreamers below -->
+ 
+ 			<!-- If this is a dvrstreamingrepeater, define Application/Repeater/OriginURL to point back to the origin -->
+-			
++
+ 			<!-- To turn on DVR recording set Recorders to dvrrecorder.  This works with dvrstreamingpacketizer  -->
+ 			<Recorders></Recorders>
+ 
+@@ -78,18 +78,18 @@
+ 
+ 		<TimedText>
+ 			<!-- VOD caption providers (separate with commas): vodcaptionprovidermp4_3gpp, vodcaptionproviderttml, vodcaptionproviderwebvtt,  vodcaptionprovidersrt, vodcaptionproviderscc -->
+-			<VODTimedTextProviders>vodcaptionprovidermp4_3gpp</VODTimedTextProviders>
+-			
++			<VODTimedTextProviders>vodcaptionprovidermp4_3gpp,vodcaptionproviderttml,vodcaptionproviderwebvtt,vodcaptionprovidersrt,vodcaptionproviderscc</VODTimedTextProviders>
++
+ 			<!-- Properties for TimedText -->
+ 			<Properties>
+-			</Properties>		
++			</Properties>
+ 		</TimedText>
+-		
++
+ 		<!-- HTTPStreamers (separate with commas): cupertinostreaming,   mpegdashstreaming, dvrchunkstreaming -->
+ 		<HTTPStreamers>cupertinostreaming,mpegdashstreaming</HTTPStreamers>
+ 		<MediaCache>
+ 			<MediaCacheSourceList></MediaCacheSourceList>
+-		</MediaCache>		
++		</MediaCache>
+ 		<SharedObjects>
+ 			<StorageDir>${com.wowza.wms.context.VHostConfigHome}/applications/${com.wowza.wms.context.Application}/sharedobjects/${com.wowza.wms.context.ApplicationInstance}</StorageDir>
+ 		</SharedObjects>
+@@ -198,6 +198,16 @@
+ 		<HTTPStreamer>
+ 			<!-- Properties defined here will override any properties defined in conf/HTTPStreamers.xml for any HTTPStreamer loaded by this applications -->
+ 			<Properties>
++				<Property>
++					<Name>cupertinoChunkDurationTarget</Name>
++					<Value>2000</Value>
++					<Type>Integer</Type>
++				</Property>
++				<Property>
++					<Name>mpegdashSegmentDurationTarget</Name>
++					<Value>2000</Value>
++					<Type>Integer</Type>
++				</Property>
+ 			</Properties>
+ 		</HTTPStreamer>
+ 		<Manager>
+@@ -208,11 +218,11 @@
+ 		<Repeater>
+ 			<OriginURL></OriginURL>
+ 			<QueryString><![CDATA[]]></QueryString>
+-		</Repeater> 
++		</Repeater>
+ 		<StreamRecorder>
+ 			<Properties>
+ 			</Properties>
+-		</StreamRecorder> 
++		</StreamRecorder>
+ 		<Modules>
+ 			<Module>
+ 				<Name>base</Name>
+@@ -228,10 +238,15 @@
+ 				<Name>flvplayback</Name>
+ 				<Description>FLVPlayback</Description>
+ 				<Class>com.wowza.wms.module.ModuleFLVPlayback</Class>
+-			</Module> 
++			</Module>
+ 		</Modules>
+ 		<!-- Properties defined here will be added to the IApplication.getProperties() and IApplicationInstance.getProperties() collections -->
+ 		<Properties>
++			<Property>
++				<Name>mpegdashMinBufferTime</Name>
++				<Value>6000</Value>
++				<Type>Integer</Type>
++			</Property>
+ 		</Properties>
+ 	</Application>
+ </Root>

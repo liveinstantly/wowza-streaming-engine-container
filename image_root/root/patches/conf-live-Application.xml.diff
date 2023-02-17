@@ -1,0 +1,150 @@
+--- conf/live/Application.xml.orig	2023-02-16 18:52:58.146358780 +0000
++++ conf/live/Application.xml	2023-02-16 18:58:09.913831290 +0000
+@@ -18,21 +18,21 @@
+ 		</Connections>
+ 		<!--
+ 			StorageDir path variables
+-			
++
+ 			${com.wowza.wms.AppHome} - Application home directory
+ 			${com.wowza.wms.ConfigHome} - Configuration home directory
+ 			${com.wowza.wms.context.VHost} - Virtual host name
+ 			${com.wowza.wms.context.VHostConfigHome} - Virtual host config directory
+ 			${com.wowza.wms.context.Application} - Application name
+ 			${com.wowza.wms.context.ApplicationInstance} - Application instance name
+-			
++
+ 		-->
+ 		<Streams>
+ 			<StreamType>live</StreamType>
+ 			<StorageDir>${com.wowza.wms.context.VHostConfigHome}/content</StorageDir>
+ 			<KeyDir>${com.wowza.wms.context.VHostConfigHome}/keys</KeyDir>
+ 			<!-- LiveStreamPacketizers (separate with commas): cupertinostreamingpacketizer, mpegdashstreamingpacketizer, cupertinostreamingrepeater,  mpegdashstreamingrepeater -->
+-			<LiveStreamPacketizers>cupertinostreamingpacketizer,mpegdashstreamingpacketizer</LiveStreamPacketizers>
++			<LiveStreamPacketizers>cupertinostreamingpacketizer,cmafstreamingpacketizer,mpegdashstreamingpacketizer</LiveStreamPacketizers>
+ 			<!-- Properties defined here will override any properties defined in conf/Streams.xml for any streams types loaded by this application -->
+ 			<Properties>
+ 			</Properties>
+@@ -54,7 +54,7 @@
+ 			<!-- As an origin, also add dvrchunkstreaming to HTTPStreamers below -->
+ 
+ 			<!-- If this is a dvrstreamingrepeater, define Application/Repeater/OriginURL to point back to the origin -->
+-			
++
+ 			<!-- To turn on DVR recording set Recorders to dvrrecorder.  This works with dvrstreamingpacketizer  -->
+ 			<Recorders></Recorders>
+ 
+@@ -78,8 +78,8 @@
+ 
+ 		<TimedText>
+ 			<!-- VOD caption providers (separate with commas): vodcaptionprovidermp4_3gpp, vodcaptionproviderttml, vodcaptionproviderwebvtt,  vodcaptionprovidersrt, vodcaptionproviderscc -->
+-			<VODTimedTextProviders>vodcaptionprovidermp4_3gpp</VODTimedTextProviders>
+-			
++			<VODTimedTextProviders>vodcaptionprovidermp4_3gpp,vodcaptionproviderttml,vodcaptionproviderwebvtt,vodcaptionprovidersrt,vodcaptionproviderscc</VODTimedTextProviders>
++
+ 			<!-- Properties for TimedText -->
+ 			<Properties>
+ 			</Properties>
+@@ -193,11 +193,81 @@
+ 		<LiveStreamPacketizer>
+ 			<!-- Properties defined here will override any properties defined in conf/LiveStreamPacketizers.xml for any LiveStreamPacketizers loaded by this applications -->
+ 			<Properties>
++				<Property>
++					<Name>cupertinoChunkDurationTarget</Name>
++					<Value>2000</Value>
++					<Type>Integer</Type>
++				</Property>
++				<Property>
++					<Name>cupertinoMaxChunkCount</Name>
++					<Value>60</Value>
++					<Type>Integer</Type>
++				</Property>
++				<Property>
++					<Name>cupertinoPlaylistChunkCount</Name>
++					<Value>30</Value>
++					<Type>Integer</Type>
++				</Property>
++				<Property>
++					<Name>mpegdashChunkDurationTarget</Name>
++					<Value>2000</Value>
++					<Type>Integer</Type>
++				</Property>
++				<Property>
++					<Name>mpegdashMaxChunkCount</Name>
++					<Value>60</Value>
++					<Type>Integer</Type>
++				</Property>
++				<Property>
++					<Name>mpegdashPlaylistChunkCount</Name>
++					<Value>30</Value>
++					<Type>Integer</Type>
++				</Property>
++				<Property>
++					<Name>cmafSegmentDurationTarget</Name>
++					<Value>2000</Value>
++					<Type>Integer</Type>
++				</Property>
++				<Property>
++					<Name>cmafMaxSegmentCount</Name>
++					<Value>60</Value>
++					<Type>Integer</Type>
++				</Property>
++				<Property>
++					<Name>cmafPlaylistSegmentCount</Name>
++					<Value>30</Value>
++					<Type>Integer</Type>
++				</Property>
++				<Property>
++					<Name>cupertinoCreateAudioOnlyRendition</Name>
++					<Value>true</Value>
++					<Type>Boolean</Type>
++				</Property>
++				<Property>
++					<Name>cupertinoCreateVideoOnlyRendition</Name>
++					<Value>true</Value>
++					<Type>Boolean</Type>
++				</Property>
++				<Property>
++					<Name>cupertinoPacketizeAllStreamsAsTS</Name>
++					<Value>true</Value>
++					<Type>Boolean</Type>
++				</Property>
+ 			</Properties>
+ 		</LiveStreamPacketizer>
+ 		<HTTPStreamer>
+ 			<!-- Properties defined here will override any properties defined in conf/HTTPStreamers.xml for any HTTPStreamer loaded by this applications -->
+ 			<Properties>
++				<Property>
++					<Name>cupertinoExtXVersion</Name>
++					<Value>5</Value>
++					<Type>Integer</Type>
++				</Property>
++				<Property>
++					<Name>cupertinoCodecStringFormatId</Name>
++					<Value>2</Value>
++					<Type>Integer</Type>
++				</Property>
+ 			</Properties>
+ 		</HTTPStreamer>
+ 		<Manager>
+@@ -212,7 +282,7 @@
+ 		<StreamRecorder>
+ 			<Properties>
+ 			</Properties>
+-		</StreamRecorder> 
++		</StreamRecorder>
+ 		<Modules>
+ 			<Module>
+ 				<Name>base</Name>
+@@ -247,6 +317,11 @@
+ 				<Value>${com.wowza.wms.context.VHostConfigHome}/conf/${com.wowza.wms.context.Application}/PushPublishMap.txt</Value>
+ 				<Type>String</Type>
+ 			</Property>
++			<Property>
++				<Name>mpegdashMinBufferTime</Name>
++				<Value>6000</Value>
++				<Type>Integer</Type>
++			</Property>
+ 		</Properties>
+ 	</Application>
+ </Root>

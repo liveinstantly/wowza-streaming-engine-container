@@ -1,0 +1,22 @@
+--- manager/bin/startmgr.sh.orig	2023-02-10 08:41:00.044052663 +0000
++++ manager/bin/startmgr.sh	2023-02-10 08:41:07.952129696 +0000
+@@ -91,7 +91,7 @@
+ 	if [ "$WMSMGRCOMMAND" = "start" ]; then
+ 	   $RUNCMD $CMD $BACKGRND &
+ 	else
+-  	   $CMD
++  	   exec $CMD
+ 	fi
+ PID=$!
+ rc=$?
+--- bin/startup.sh.orig	2023-02-10 07:56:45.052160650 +0000
++++ bin/startup.sh	2023-02-10 10:18:40.627087144 +0000
+@@ -41,7 +41,7 @@
+ 
+ # log interceptor com.wowza.wms.logging.LogNotify - see Javadocs for ILogNotify
+ 
+-$_EXECJAVA $WMSTUNE_OPTS $JMXOPTIONS -Dcom.wowza.wms.runmode="$mode" -Dcom.wowza.wms.native.base="linux" -Dlog4j.configurationFile="$WMSCONFIG_HOME/conf/log4j2-config.xml" -Dcom.wowza.wms.AppHome="$WMSAPP_HOME" -Dcom.wowza.wms.ConfigURL="$WMSCONFIG_URL" -Dcom.wowza.wms.ConfigHome="$WMSCONFIG_HOME" -cp $WMSAPP_HOME/bin/wms-bootstrap.jar com.wowza.wms.bootstrap.Bootstrap start
++exec $_EXECJAVA $WMSTUNE_OPTS $JMXOPTIONS -Dcom.wowza.wms.runmode="$mode" -Dcom.wowza.wms.native.base="linux" -Dlog4j.configurationFile="$WMSCONFIG_HOME/conf/log4j2-config.xml" -Dcom.wowza.wms.AppHome="$WMSAPP_HOME" -Dcom.wowza.wms.ConfigURL="$WMSCONFIG_URL" -Dcom.wowza.wms.ConfigHome="$WMSCONFIG_HOME" -cp $WMSAPP_HOME/bin/wms-bootstrap.jar com.wowza.wms.bootstrap.Bootstrap start
+ 
+ rc=$?
+ if [ $rc -ge 10 ] && [ $rc -le 15 ] ; then
