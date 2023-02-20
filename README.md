@@ -141,7 +141,7 @@ If you want to build your own container image, you can run the following command
 yarn run build-for-your-own
 ```
 
-## Run and Debug a container instance
+### Run and Debug a container instance
 
 You can run the following command to start your own container instance.
 
@@ -157,3 +157,11 @@ And run the following command to debug a running instance interally by logging i
 ```shell
 docker exec -it <container_id> bash
 ```
+
+## References
+
+* [Wowza Streaming Engine](https://www.wowza.com/streaming-engine)
+* [Download Wowza Streaming Engine](https://www.wowza.com/pricing/installer)
+* [Latest software updates for Wowza Streaming Engine](https://www.wowza.com/docs/wowza-streaming-engine-software-updates)
+* [Wowza Streaming Engine 4.8.21 Release Notes](https://www.wowza.com/docs/wowza-streaming-engine-4-8-21-release-notes)
+* [Wowza Streaming Engine release history](https://www.wowza.com/docs/wowza-streaming-engine-release-history)
