@@ -97,13 +97,13 @@ The build scripts will download Wowza Streaming Engine Installer binary from Wow
 The changes of server configuration files are as below:
 
 * conf/Server.xml
-  - Allow REST API Interface access from everywhere (`*`) instead of localhost only (`127.0.0.1`)
+  * Allow REST API Interface access from everywhere (`*`) instead of localhost only (`127.0.0.1`)
 * conf/Tune.xml
-  - Change heap size from Development mode (`TuningHeapSizeDevelopment`) to Production mode (`TuningHeapSizeProduction`)
+  * Change heap size from Development mode (`TuningHeapSizeDevelopment`) to Production mode (`TuningHeapSizeProduction`)
 * conf/live/Application.xml
-  - 1. Add `cmafstreamingpacketizer` to `Streams/LiveStreamPacketizers`.
-  - 2. Add all VOD Caption Providers to `TimedText/VODTimedTextProviders`.
-  - 3. Add the following properties to `LiveStreamPacketizer`.
+  * 1. Add `cmafstreamingpacketizer` to `Streams/LiveStreamPacketizers`.
+  * 2. Add all VOD Caption Providers to `TimedText/VODTimedTextProviders`.
+  * 3. Add the following properties to `LiveStreamPacketizer`.
     * `cupertinoChunkDurationTarget` = 2000 ms
     * `cupertinoMaxChunkCount` = 60
     * `cupertinoPlaylistChunkCount` = 30
@@ -116,22 +116,22 @@ The changes of server configuration files are as below:
     * `cupertinoCreateAudioOnlyRendition` = true
     * `cupertinoCreateVideoOnlyRendition` = true
     * `cupertinoPacketizeAllStreamsAsTS` = true
-  - 4. Add the following properties to `HTTPStreamer`.
+  * 4. Add the following properties to `HTTPStreamer`.
     * `cupertinoExtXVersion` = 5 (use version 5)
     * `cupertinoCodecStringFormatId` = 2 (use new codec id format)
-  - 5. Add the following Custom properties.
+  * 5. Add the following Custom properties.
     * `mpegdashMinBufferTime` = 6000 ms
 * conf/vod/Application.xml
-  - 1. Add all VOD Caption Providers to `TimedText/VODTimedTextProviders`.
-  - 2. Add the following properties to `HTTPStreamer`.
+  * 1. Add all VOD Caption Providers to `TimedText/VODTimedTextProviders`.
+  * 2. Add the following properties to `HTTPStreamer`.
     * `cupertinoChunkDurationTarget` = 2000 ms
     * `mpegdashSegmentDurationTarget` = 2000 ms
-  - 3. Add the following Custom properties.
+  * 3. Add the following Custom properties.
     * `mpegdashMinBufferTime` = 6000 ms
 * bin/startup.sh
-  - Change startup service for supervisord.
+  * Change startup service for supervisord.
 * manager/bin/startmgr.sh
-  - Change startup service for supervisord.
+  * Change startup service for supervisord.
 
 ### Run a build command
 
