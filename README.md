@@ -4,7 +4,7 @@
 
 This is a repository for building a Wowza Streaming Engine contaienr image from scratch, which can be applied to your custom container image of Wowza Streaming Engine instance. This container image is based on Ubuntu 22.04 (Jammy) release.
 
-Although there is official public container images from Wowza at Docker Hub ([https://hub.docker.com/r/wowzamedia/wowza-streaming-engine-linux](https://hub.docker.com/r/wowzamedia/wowza-streaming-engine-linux)), this repository gives you a chance to optimize your own container image for Wowza Streaming Engine. For example, you can reduce a footprint like the following command output of `docker image ls` below. This output shows 32~36 MB (about 8%) reduction of footprint.
+Although there is official public container images from Wowza at Docker Hub ([https://hub.docker.com/r/wowzamedia/wowza-streaming-engine-linux](https://hub.docker.com/r/wowzamedia/wowza-streaming-engine-linux)), this repository gives you a chance to optimize your own container image for Wowza Streaming Engine. For example, you can reduce a footprint of container image, and your custom logics and configurations can be pre-installed to your own container image. The following command output of `docker image ls` shows 32~36 MB (about 8%) reduction of footprint.
 
 ```shell
 $ docker image ls
