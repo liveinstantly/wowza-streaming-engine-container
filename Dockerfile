@@ -51,7 +51,6 @@ RUN mv /root/WowzaStreamingEngine-${WSE_VER}-linux-x64-installer.run /root/Wowza
     && chmod +x /root/WowzaStreamingEngine-linux-x64-installer.run \
     && /root/wse4_unattended_installer.exp \
     && cd /root \
-    && rm -f /root/WowzaStreamingEngine-linux-x64-installer.run \
     && curl -O https://www.wowza.com/downloads/forums/restapidocumentation/RESTAPIDocumentationWebpage.zip \
     && cd /usr/local/WowzaStreamingEngine \
     && for i in /root/patches/${WSE_VER}/*.diff; do patch -p0 < $i ; done \
@@ -62,8 +61,8 @@ RUN mv /root/WowzaStreamingEngine-${WSE_VER}-linux-x64-installer.run /root/Wowza
     && mkdir -p /root/wowza_backup_home/manager/ \
     && cp -rp /usr/local/WowzaStreamingEngine/conf /root/wowza_backup_home/ \
     && cp -rp /usr/local/WowzaStreamingEngine/manager/conf /root/wowza_backup_home/manager \
-    && rm -rf /root/patches/ /root/generate_engine_jks.sh /root/generate_manager_jks.sh \
-    && rm -f /root/WowzaStreamingEngine-linux-x64-installer.run /root/wse_unattended_install.exp \
+    && rm -rf /root/patches/ /root/generate_engine_jks.sh /root/generate_manager_jks.sh /root/wse_unattended_install.exp \
+    && rm -f /root/WowzaStreamingEngine-linux-x64-installer.run /root/WowzaStreamingEngine-*-linux-x64-installer.run \
     && rm -f '/usr/local/WowzaStreamingEngine/Uninstall Wowza Streaming Engine.desktop' \
     && rm -f /usr/local/WowzaStreamingEngine/uninstall \
     && rm -f /usr/local/WowzaStreamingEngine/uninstall.dat \
