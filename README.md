@@ -4,19 +4,9 @@
 
 This is a repository for building a Wowza Streaming Engine contaienr image from scratch, which can be applied to your custom container image of Wowza Streaming Engine instance. This container image is based on Ubuntu 22.04 (Jammy) release.
 
-Although there is official public container images from Wowza at Docker Hub ([https://hub.docker.com/r/wowzamedia/wowza-streaming-engine-linux](https://hub.docker.com/r/wowzamedia/wowza-streaming-engine-linux)), this repository gives you a chance to optimize your own container image for Wowza Streaming Engine. For example, you can reduce a footprint of container image, and your custom logics and configurations can be pre-installed to your own container image. The following command output of `docker image ls` shows 32~36 MB (about 8%) reduction of footprint.
+Although there is official public container images from Wowza at Docker Hub ([https://hub.docker.com/r/wowzamedia/wowza-streaming-engine-linux](https://hub.docker.com/r/wowzamedia/wowza-streaming-engine-linux)), this repository gives you a chance to optimize your own container image for Wowza Streaming Engine. For example, you can reduce or optimize a footprint of container image, and your custom logics and configurations can be pre-installed to your own container image.
 
-```shell
-$ docker image ls
-REPOSITORY                                            TAG              IMAGE ID       CREATED          SIZE
-ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu   4.8.20           6bc3edb6f959   2 hours ago      488MB
-wowzamedia/wowza-streaming-engine-linux               4.8.20           4778ca39ce29   5 months ago     520MB
-
-$ docker image ls
-REPOSITORY                                            TAG              IMAGE ID       CREATED          SIZE
-ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu   4.8.21           23708fdfa012   20 seconds ago   487MB
-wowzamedia/wowza-streaming-engine-linux               4.8.21           97511269b1ae   3 weeks ago      523MB
-```
+This container image supports SSL/TLS enablement, which can be combined with Cert Manager in the Kubernetes deployment.
 
 ## Quick Start
 
@@ -25,12 +15,12 @@ wowzamedia/wowza-streaming-engine-linux               4.8.21           97511269b
 We have pushed our custom container image for Wowza Streaming Engine (Linux) at GitHub Container Registy.
 You can use the following container images:
 
-* `ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu:4.8.21`
+* `ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu:latest`
 
 Here is a sample command to pull an image for your Docker environment.
 
 ```shell
-docker pull ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu:4.8.21
+docker pull ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu:latest
 ```
 
 ### 2. Run a container image
@@ -50,18 +40,27 @@ The following environment values are for customizing container startup parameter
 
 | Environment Variables | Description |
 | --------------------- | ----------- |
-| WSE_MGR_USER          | Specify a username for Wowza Streaming Engine Manager. If this parameter isn't used, the default username is `wowza`.        |
-| WSE_MGR_PASS          | Specify a password for Wowza Streaming Engine Manager. If this parameter isn't used, the ddefault password is `wowza`.       |
+| WSE_MGR_USER          | Specify a username for Wowza Streaming Engine Manager. If this parameter isn't used, the default username is `wowza`. |
+| WSE_MGR_PASS          | Specify a password for Wowza Streaming Engine Manager. If this parameter isn't used, the ddefault password is `wowza`. |
 | WSE_LIC               | Specify your Wowza Streaming Engine license string. If this parameter isn't used, Wowza's default trial license key is used. |
-| WSE_IP_PARAM          | Specify an internal IP address for the container. If this parameter isn't used, the default parameter `localhost` is used.   |
+| WSE_IP_PARAM          | Specify an internal IP address for the container. If this parameter isn't used, the default parameter `localhost` is used. |
+| WSE_TLS_CERT          | Specify a mount-point directory of SSL/TLS private key (`tls.key`) and certificate (`tls.crt`) for Wowza Streaming Engine. |
+| WSE_MGR_TLS_CERT      | Specify a mount-point directory of SSL/TLS private key (`tls.key`) and certificate (`tls.crt`) for Wowza Streaming Engine Manager. |
 
 Here is a sample command for running a container instance.
 You may need to create docker volumes to mount the volumes for storing your own configuration files and server working files (e.g. logs, stats).
 
 ```shell
 docker run -d --rm \
-    --expose 1935/tcp --expose 8086/tcp --expose 8087/tcp --expose 8088/tcp \
-    --publish 1935:1935 --publish 8086:8086 --publish 8087:8087 --publish 8088:8088 \
+    // for Default Streaming Engine
+    --expose 1935/tcp --expose 8086/tcp --expose 8087/tcp \
+    --publish 1935:1935 --publish 8086:8086 --publish 8087:8087 \
+    // for SSL/TLS Streaming Engine
+    --expose 443/tcp --publish 443:443 \
+    // for Non-SSL Manager
+    --expose 8088/tcp  --publish 8088:8088 \
+    // for SSL/TLS Manager
+    --expose 8090/tcp  --publish 8090:8090 \
     --volume wse-engine-logs:/usr/local/WowzaStreamingEngine/logs \
     --volume wse-manager-logs:/usr/local/WowzaStreamingEngine/manager/logs \
     --volume supervisor-logs:/var/log/supervisor/ \
@@ -71,17 +70,27 @@ docker run -d --rm \
     --volume wse-engine-keys:/usr/local/WowzaStreamingEngine/manager/keys \
     --volume wse-engine-apps:/usr/local/WowzaStreamingEngine/applications \
     --volume wse-engine-stats:/usr/local/WowzaStreamingEngine/stats \
+    --volume sample-tls-1:/etc/cert-engine \
+    --volume sample-tls-2:/etc/cert-engine \
     --env WSE_MGR_USER=[username] \
     --env WSE_MGR_PASS=[password] \
     --env WSE_LIC=[license] \
     --env WSE_IP_PARAM=[wowza-ip-address] \
-    liveinstantly/wowza-streaming-engine-ubuntu:[VERSION_TAG]
+    --env WSE_TLS_CERT=/etc/cert-engine \
+    --env WSE_TLS_CERT=/etc/cert-manager \
+    ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu:latest
 ```
 
 You can also do a test run with the following command:
 
 ```shell
-yarn run run-test
+yarn run start
+```
+
+To stop a test run, please run the following command:
+
+```shell
+yarn run stop
 ```
 
 ## Build your own custom container image
@@ -135,10 +144,10 @@ The changes of server configuration files are as below:
 
 ### Run a build command
 
-If you want to build your own container image, you can run the following command. This will create a container image named with `your-own/wowza-streaming-engine-ubuntu:[VERSION_TAG]`.
+If you want to build your own container image, you can run the following command. This will create a container image named with `local/wowza-streaming-engine-ubuntu:latest`.
 
 ```shell
-yarn run build-for-your-own
+yarn run test:build
 ```
 
 ### Run and Debug a container instance
@@ -146,16 +155,19 @@ yarn run build-for-your-own
 You can run the following command to start your own container instance.
 
 ```shell
-docker run -d --rm \
-    --expose 1935/tcp --expose 8086/tcp --expose 8087/tcp --expose 8088/tcp \
-    --publish 1935:1935 --publish 8086:8086 --publish 8087:8087 --publish 8088:8088 \
-    your-own/wowza-streaming-engine-ubuntu:[VERSION_TAG]
+yarn run test:start
 ```
 
 And run the following command to debug a running instance interally by logging in with `bash`.
 
 ```shell
 docker exec -it <container_id> bash
+```
+
+To stop a test run, please run the following command:
+
+```shell
+yarn run test:stop
 ```
 
 ## References

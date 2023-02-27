@@ -1,8 +1,17 @@
 {
     "scripts": {
-        "build-for-your-own": "docker build -t your-own/wowza-streaming-engine-ubuntu:4.8.21 .",
-        "run-test": "docker run -d --rm --expose 1935/tcp --expose 8086/tcp --expose 8087/tcp --expose 8088/tcp --publish 1935:1935 --publish 8086:8086 --publish 8087:8087 --publish 8088:8088 liveinstantly/wowza-streaming-engine-ubuntu:4.8.21",
-        "build-for-public": "docker build -t ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu:4.8.21 .",
-        "push-to-ghcr": "docker push ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu:4.8.21"
+        "build": "docker build -t ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu:4.8.21_6-`date +%Y%m%d` .",
+        "tag-latest": "docker tag ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu:4.8.21_6-`date +%Y%m%d` ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu:latest",
+        "push": "docker push ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu:4.8.21_6-`date +%Y%m%d`",
+        "push-latest": "docker push ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu:latest",
+        "release": "yarn run build && yarn run tag && yarn run push",
+
+        "start": "docker-compose up -d",
+        "stop": "docker-compose down",
+
+        "test:build": "docker build -t local/wowza-streaming-engine-ubuntu .",
+        "test:start": "docker-compose -f docker-compose-test.yml up -d",
+        "test:stop": "docker-compose -f docker-compose-test.yml down",
+        "test:rm": "docker image rm local/wowza-streaming-engine-ubuntu"
     }
 }

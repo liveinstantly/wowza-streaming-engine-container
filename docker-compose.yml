@@ -1,0 +1,25 @@
+version: "3.7"
+
+services:
+  wowza-streaming:
+    image: ghcr.io/liveinstantly/wowza-streaming-engine-ubuntu:latest
+    ports:
+      - 1935:1935
+      - 443:443
+      - 8086:8086
+      - 8087:8087
+      - 8088:8088
+      - 8090:8090
+    volumes:
+      - tls-engine:/etc/cert-engine
+      - tls-manager:/etc/cert-manager
+    environment:
+      WSE_TLS_CERT: /etc/cert-engine
+      WSE_MGR_TLS_CERT: /etc/cert-manager
+volumes:
+  tls-engine:
+    driver: local
+    name: sample-tls-1
+  tls-manager:
+    driver: local
+    name: sample-tls-2
