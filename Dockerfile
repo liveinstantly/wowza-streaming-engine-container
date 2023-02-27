@@ -54,12 +54,7 @@ RUN mv /root/WowzaStreamingEngine-${WSE_VER}-linux-x64-installer.run /root/Wowza
     && rm -f /root/WowzaStreamingEngine-linux-x64-installer.run \
     && curl -O https://www.wowza.com/downloads/forums/restapidocumentation/RESTAPIDocumentationWebpage.zip \
     && cd /usr/local/WowzaStreamingEngine \
-    && patch -p0 < /root/patches/wowza-streaming-engine-scripts.diff \
-    && patch -p0 < /root/patches/conf-live-Application.xml.diff \
-    && patch -p0 < /root/patches/conf-vod-Application.xml.diff \
-    && patch -p0 < /root/patches/conf-Server.xml.diff \
-    && patch -p0 < /root/patches/conf-VHost.xml.diff \
-    && patch -p0 < /root/patches/conf-Tune.xml.diff \
+    && for i in /root/patches/${WSE_VER}/*.diff; do patch -p0 < $i ; done \
     && cp /root/generate_engine_jks.sh ./bin/ \
     && cp /root/generate_manager_jks.sh ./manager/bin/ \
     && apt remove curl expect patch -y \
