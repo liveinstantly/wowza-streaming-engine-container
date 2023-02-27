@@ -1,0 +1,11 @@
+--- conf/Tune.xml.orig	2023-02-16 19:13:45.424023788 +0000
++++ conf/Tune.xml	2023-02-16 19:14:05.268125711 +0000
+@@ -9,7 +9,7 @@
+ 
+ 			or specify heap size directly (ex: <HeapSize>8000M</HeapSize>)
+ 		-->
+-		<HeapSize>${com.wowza.wms.TuningHeapSizeDevelopment}</HeapSize>
++		<HeapSize>${com.wowza.wms.TuningHeapSizeProduction}</HeapSize>
+ 
+ 		<!--
+ 			GarbageCollector
