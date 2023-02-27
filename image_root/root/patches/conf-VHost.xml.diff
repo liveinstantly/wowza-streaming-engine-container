@@ -1,0 +1,35 @@
+--- conf/VHost.xml.orig	2023-02-24 02:25:14.294389703 +0900
++++ conf/VHost.xml	2023-02-24 02:27:34.099215319 +0900
+@@ -61,7 +61,6 @@
+ 			</HostPort>
+ 
+ 			<!-- 443 with SSL -->
+-			<!--
+ 			<HostPort>
+ 				<Name>Default SSL Streaming</Name>
+ 				<Type>Streaming</Type>
+@@ -71,14 +70,14 @@
+ 				<HTTPIdent2Response></HTTPIdent2Response>
+ 				<SSLConfig>
+ 					<KeyStorePath>${com.wowza.wms.context.VHostConfigHome}/conf/keystore.jks</KeyStorePath>
+-					<KeyStorePassword>[password]</KeyStorePassword>
++					<KeyStorePassword>password</KeyStorePassword>
+ 					<KeyStoreType>JKS</KeyStoreType>
+ 					<DomainToKeyStoreMapPath></DomainToKeyStoreMapPath>
+ 					<SSLProtocol>TLS</SSLProtocol>
+ 					<Algorithm>SunX509</Algorithm>
+ 					<CipherSuites></CipherSuites>
+ 					<Protocols></Protocols>
+-					<AllowHttp2>false</AllowHttp2>
++					<AllowHttp2>true</AllowHttp2>
+ 				</SSLConfig>
+ 				<SocketConfiguration>
+ 					<ReuseAddress>true</ReuseAddress>
+@@ -112,7 +111,6 @@
+ 					</HTTPProvider>
+ 				</HTTPProviders>
+ 			</HostPort>
+-			-->
+ 
+ 			<!-- Admin HostPort -->
+ 			<HostPort>

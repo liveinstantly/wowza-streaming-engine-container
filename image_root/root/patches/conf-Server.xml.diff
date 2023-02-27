@@ -1,6 +1,16 @@
---- conf/Server.xml.orig	2023-02-17 09:52:50.168643254 +0000
-+++ conf/Server.xml	2023-02-17 09:53:02.868687716 +0000
-@@ -22,7 +22,7 @@
+--- conf/Server.xml.orig	2023-02-17 18:52:50.168643254 +0900
++++ conf/Server.xml	2023-02-24 02:17:31.583705441 +0900
+@@ -14,15 +14,15 @@
+ 			<DiagnosticURLEnable>true</DiagnosticURLEnable>
+ 			<SSLConfig>
+ 				<Enable>false</Enable>
+-				<KeyStorePath></KeyStorePath>
+-				<KeyStorePassword></KeyStorePassword>
++				<KeyStorePath>${com.wowza.wms.ConfigHome}/conf/keystore.jks</KeyStorePath>
++				<KeyStorePassword>password</KeyStorePassword>
+ 				<KeyStoreType>JKS</KeyStoreType>
+ 				<SSLProtocol>TLS</SSLProtocol>
+ 				<Algorithm>SunX509</Algorithm>
  				<CipherSuites></CipherSuites>
  				<Protocols></Protocols>
  			</SSLConfig>

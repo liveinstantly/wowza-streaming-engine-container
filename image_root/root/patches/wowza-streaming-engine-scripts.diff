@@ -1,17 +1,16 @@
---- manager/bin/startmgr.sh.orig	2023-02-10 08:41:00.044052663 +0000
-+++ manager/bin/startmgr.sh	2023-02-10 08:41:07.952129696 +0000
-@@ -91,7 +91,7 @@
- 	if [ "$WMSMGRCOMMAND" = "start" ]; then
- 	   $RUNCMD $CMD $BACKGRND &
- 	else
--  	   $CMD
-+  	   exec $CMD
- 	fi
- PID=$!
- rc=$?
---- bin/startup.sh.orig	2023-02-10 07:56:45.052160650 +0000
-+++ bin/startup.sh	2023-02-10 10:18:40.627087144 +0000
-@@ -41,7 +41,7 @@
+--- bin/startup.sh.orig	2023-02-28 00:07:28.385791563 +0900
++++ bin/startup.sh	2023-02-28 00:08:41.590638512 +0900
+@@ -30,6 +30,9 @@
+ #JMXOPTIONS="$JMXOPTIONS -Dcom.sun.management.jmxremote.password.file=$WMSCONFIG_HOME/conf/jmxremote.password"
+ #JMXOPTIONS="$JMXOPTIONS -Dcom.sun.management.jmxremote.access.file=$WMSCONFIG_HOME/conf/jmxremote.access"
+ 
++# Generate Java Keystore file for SSL/TLS.
++. $WMSAPP_HOME/bin/generate_engine_jks.sh
++
+ ulimit -n 64000 > /dev/null 2>&1
+ 
+ rc=144
+@@ -41,7 +44,7 @@
  
  # log interceptor com.wowza.wms.logging.LogNotify - see Javadocs for ILogNotify
  
@@ -20,3 +19,24 @@
  
  rc=$?
  if [ $rc -ge 10 ] && [ $rc -le 15 ] ; then
+--- manager/bin/startmgr.sh.orig	2023-02-28 00:05:45.828503375 +0900
++++ manager/bin/startmgr.sh	2023-02-28 00:09:11.566970097 +0900
+@@ -82,6 +82,9 @@
+ 	-Dlog4j.configurationFile=$WMSLOGGING_LOG4J2_PROPERTIES \
+ 	-Dlogback.configurationFile=$WMSLOGGING_LOGBACK_PROPERTIES"
+ 
++# Generate Java Keystore file for SSL/TLS.
++. $WMSMGR_HOME/bin/generate_manager_jks.sh
++
+ if [[ 1 == $CloudPlatformFlag ]]; then
+ 	JAVA_SYSTEM_PROPERTIES="$JAVA_SYSTEM_PROPERTIES -Dfile.encoding=UTF-8"
+ 	CMD="$_EXECJAVA -cp $CLASSPATH $JAVA_SYSTEM_PROPERTIES launch.Main --prefix=/enginemanager --defaultWebApp=/enginemanager --tempDirectory=$WMSMGR_HOME/temp  --webroot=$WMSMGR_HOME/temp --warfile=$WMSMGR_HOME/lib/WMSManager.war --httpPort=8088 --ajp13Port=-1 --directoryListings=false"
+@@ -91,7 +94,7 @@
+ 	if [ "$WMSMGRCOMMAND" = "start" ]; then
+ 	   $RUNCMD $CMD $BACKGRND &
+ 	else
+-  	   $CMD
++  	   exec $CMD
+ 	fi
+ PID=$!
+ rc=$?

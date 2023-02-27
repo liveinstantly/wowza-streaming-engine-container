@@ -14,6 +14,10 @@ FROM ubuntu:jammy AS builder
 
 LABEL "vendor"="Wowza Media Systems" "maintainer"="LiveInstantly, LLC."
 
+# Arguments for build
+ARG WSE_VER=4.8.21+6
+ARG WSE_VER2=4-8-21+6
+
 # An expired trial license as default license only for installer.
 ENV WSE_LICENSEKEY=ET1E4-v8Qtp-QFK9v-4baBn-eepcV-vkGVa-6hj89f6HRZUy
 # ONLY FOR SETUP: A temporary username/password as default Wowza WSE credential
@@ -24,22 +28,27 @@ ENV WSE_PASSWORD=wowza
 # Copy required files.
 ADD ./image_root /
 RUN chmod 755 /root/wse4_unattended_installer.exp \
+    && chmod 755 /root/generate_engine_jks.sh \
+    && chmod 755 /root/generate_manager_jks.sh \
     && chmod 755 /usr/sbin/entrypoint.sh \
     && chmod 644 /etc/supervisor/conf.d/WowzaStreamingEngine.conf \
     && chmod 644 /etc/supervisor/conf.d/WowzaStreamingEngineManager.conf
 # Setup tools.
 RUN apt update -y && apt upgrade -y \
-    && apt install supervisor curl expect patch -y \
+    && apt install supervisor curl expect patch xmlstarlet -y \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
+
 # Download Wowza Streaming Engine installer package.
-#RUN curl -o /root/WowzaStreamingEngine-linux-x64-installer.run \
-#    https://www.wowza.com/downloads/WowzaStreamingEngine-4-8-20+1/WowzaStreamingEngine-4.8.20+1-linux-x64-installer.run
-# Use Downloaded Wowza Streaming Engine installer package.
-RUN mv /root/WowzaStreamingEngine-4.*-linux-x64-installer.run /root/WowzaStreamingEngine-linux-x64-installer.run
+RUN [ -f /root/WowzaStreamingEngine-${WSE_VER}-linux-x64-installer.run ] \
+    || curl -f -o /root/WowzaStreamingEngine-${WSE_VER}-linux-x64-installer.run https://www.wowza.com/downloads/WowzaStreamingEngine-${WSE_VER2}/WowzaStreamingEngine-${WSE_VER}-linux-x64-installer.run
+# NOTES:
+#  If you will get 404 error at here, please download a Wowza Streaming Engine Installer file and copy it to ./image_root/root directory.
+
 # Setup Wowza Streaming Engine.
-RUN chmod +x /root/WowzaStreamingEngine-linux-x64-installer.run \
+RUN mv /root/WowzaStreamingEngine-${WSE_VER}-linux-x64-installer.run /root/WowzaStreamingEngine-linux-x64-installer.run \
+    && chmod +x /root/WowzaStreamingEngine-linux-x64-installer.run \
     && /root/wse4_unattended_installer.exp \
     && cd /root \
     && rm -f /root/WowzaStreamingEngine-linux-x64-installer.run \
@@ -49,12 +58,16 @@ RUN chmod +x /root/WowzaStreamingEngine-linux-x64-installer.run \
     && patch -p0 < /root/patches/conf-live-Application.xml.diff \
     && patch -p0 < /root/patches/conf-vod-Application.xml.diff \
     && patch -p0 < /root/patches/conf-Server.xml.diff \
+    && patch -p0 < /root/patches/conf-VHost.xml.diff \
     && patch -p0 < /root/patches/conf-Tune.xml.diff \
+    && cp /root/generate_engine_jks.sh ./bin/ \
+    && cp /root/generate_manager_jks.sh ./manager/bin/ \
     && apt remove curl expect patch -y \
     && mkdir -p /root/wowza_backup_home/ \
     && mkdir -p /root/wowza_backup_home/manager/ \
     && cp -rp /usr/local/WowzaStreamingEngine/conf /root/wowza_backup_home/ \
     && cp -rp /usr/local/WowzaStreamingEngine/manager/conf /root/wowza_backup_home/manager \
+    && rm -rf /root/patches/ /root/generate_engine_jks.sh /root/generate_manager_jks.sh \
     && rm -f /root/WowzaStreamingEngine-linux-x64-installer.run /root/wse_unattended_install.exp \
     && rm -f '/usr/local/WowzaStreamingEngine/Uninstall Wowza Streaming Engine.desktop' \
     && rm -f /usr/local/WowzaStreamingEngine/uninstall \
