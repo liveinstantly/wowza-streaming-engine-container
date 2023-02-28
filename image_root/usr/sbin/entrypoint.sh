@@ -41,27 +41,29 @@ fi
 # ------------------------------------------------------------------------------
 # Update Wowza WSE credentials
 # ------------------------------------------------------------------------------
-if [ ! -z $WSE_MGR_CRED_RESET ]; then
-        print "Reset Engine credential (username/password)."
-        if [ -z $WSE_MGR_USER ]; then
-                mgrUser="wowza"
-        else
-                mgrUser=$WSE_MGR_USER
-        fi
-        if [ -z $WSE_MGR_PASS ]; then
-                mgrPass="wowza"
-        else
-                mgrPass=$WSE_MGR_PASS
-        fi
-        grep -e "^#" ${WMSAPP_HOME}/conf/admin.password > ${WMSAPP_HOME}/conf/admin.password.new
-        echo -e "\n$mgrUser $mgrPass admin|advUser cleartext\n" >> ${WMSAPP_HOME}/conf/admin.password.new
-        mv ${WMSAPP_HOME}/conf/admin.password.new ${WMSAPP_HOME}/conf/admin.password
-        grep -e "^#" ${WMSAPP_HOME}/conf/publish.password > ${WMSAPP_HOME}/conf/publish.password.new
-        echo -e "\n$mgrUser $mgrPass\n" >> ${WMSAPP_HOME}/conf/publish.password.new
-        mv ${WMSAPP_HOME}/conf/publish.password.new ${WMSAPP_HOME}/conf/publish.password
-        echo -e "$mgrUser $mgrPass\n" > ${WMSAPP_HOME}/conf/jmxremote.password
-        echo -e "$mgrUser readwrite\n" > ${WMSAPP_HOME}/conf/jmxremote.access
+print "Reset Engine credential (username/password)."
+if [ -z $WSE_MGR_USER ]; then
+        mgrUser="wowza"
+else
+        mgrUser=$WSE_MGR_USER
 fi
+if [ -z $WSE_MGR_PASS ]; then
+        mgrPass="wowza"
+else
+        mgrPass=$WSE_MGR_PASS
+fi
+# Update Manager credentials
+WSE_MGR_PASS_BCRYPT=`htpasswd -bnBC 10 "" "${WSE_MGR_PASS}" | sed 's/^://'`
+grep -e "^#" ${WMSAPP_HOME}/conf/admin.password > ${WMSAPP_HOME}/conf/admin.password.new
+echo -e "\n$mgrUser $WSE_MGR_PASS_BCRYPT admin|advUser bcrypt\n" >> ${WMSAPP_HOME}/conf/admin.password.new
+mv ${WMSAPP_HOME}/conf/admin.password.new ${WMSAPP_HOME}/conf/admin.password
+# Update JMX Remote credentials
+echo -e "$mgrUser $mgrPass\n" > ${WMSAPP_HOME}/conf/jmxremote.password
+echo -e "$mgrUser readwrite\n" > ${WMSAPP_HOME}/conf/jmxremote.access
+# Update Publish credentials
+#grep -e "^#" ${WMSAPP_HOME}/conf/publish.password > ${WMSAPP_HOME}/conf/publish.password.new
+#echo -e "\n$mgrUser $mgrPass\n" >> ${WMSAPP_HOME}/conf/publish.password.new
+#mv ${WMSAPP_HOME}/conf/publish.password.new ${WMSAPP_HOME}/conf/publish.password
 
 
 # ------------------------------------------------------------------------------
