@@ -8,6 +8,8 @@ Although there is official public container images from Wowza at Docker Hub ([ht
 
 This container image supports SSL/TLS enablement, which can be combined with Cert Manager in the Kubernetes deployment.
 
+NOTE: By using this image, you will agree to comply with the Wowza EULA
+
 ## Quick Start
 
 ### 1. Use our public container image
